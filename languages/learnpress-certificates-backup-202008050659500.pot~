@@ -1,0 +1,398 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-02 08:58+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: learnpress-certificates.php:50
+#, php-format
+msgid ""
+"<strong>%s</strong> addon version %s requires %s version %s or higher is "
+"<strong>installed</strong> and <strong>activated</strong>."
+msgstr ""
+
+#: learnpress-certificates.php:51
+msgid "LearnPress Certificates"
+msgstr ""
+
+#: learnpress-certificates.php:53
+msgid "LearnPress"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:81
+#: inc/class-lp-certificate-post-type.php:117
+msgid "Certificate for course "
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:215
+#: inc/class-lp-certificate-post-type.php:240
+#: inc/class-lp-certificate-post-type.php:244
+#: inc/class-lp-certificate-settings.php:9 inc/load.php:189
+#: templates/list-certificates.php:17
+msgid "Certificates"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:239
+#: inc/class-lp-certificate-post-type.php:241
+#: inc/class-lp-certificate-post-type.php:323 templates/view-button.php:20
+msgid "Certificate"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:242
+#: inc/class-lp-certificate-post-type.php:270
+msgid "Add New Certificate"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:243
+#: inc/class-lp-certificate-post-type.php:271
+msgid "Edit Certificate"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:267
+#: inc/class-lp-certificate-post-type.php:269
+msgid "User Certificate"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:268
+#: inc/class-lp-certificate-post-type.php:272
+msgid "User Certificates"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:303
+msgid "Export"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:320
+msgid "Courses"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:356
+msgid "-"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:384
+msgid "Unassigned"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:408
+msgid "Layers"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:415
+msgid "Layer Options"
+msgstr ""
+
+#: inc/class-lp-certificate-post-type.php:422
+msgid "Certificate Settings"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:17
+msgid "Google Fonts"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:23
+msgid "Social Sharing"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:28
+msgid "Twitter"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:29
+msgid "Facebook"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:30
+msgid "Plusone"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:35
+msgid "Certificate types"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:39
+msgid "Canvas"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:40
+msgid "Image"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:44
+msgid "Fonts directory"
+msgstr ""
+
+#: inc/class-lp-certificate-settings.php:47
+msgid "Enter path of fonts folder"
+msgstr ""
+
+#: inc/class-lp-user-certificate.php:48
+msgid "Invalid certificate!"
+msgstr ""
+
+#: inc/class-lp-user-certificate.php:52
+#, php-format
+msgid "Certificate %d does not exists!"
+msgstr ""
+
+#: inc/functions.php:114
+msgid "Buy now"
+msgstr ""
+
+#: inc/functions.php:181 inc/functions.php:329
+msgid "Image template type is not support, please "
+msgstr ""
+
+#: inc/load.php:390
+msgid "Delete this layer?"
+msgstr ""
+
+#: inc/load.php:408
+msgid "Course name"
+msgstr ""
+
+#: inc/load.php:413
+msgid "Student name"
+msgstr ""
+
+#: inc/load.php:418
+msgid "Course start date"
+msgstr ""
+
+#: inc/load.php:423
+msgid "Course end date"
+msgstr ""
+
+#: inc/load.php:428
+msgid "Current time"
+msgstr ""
+
+#: inc/load.php:433
+msgid "Verified Link"
+msgstr ""
+
+#: inc/load.php:438
+msgid "Custom"
+msgstr ""
+
+#: inc/admin/views/advanced-settings.php:11
+msgid "Price"
+msgstr ""
+
+#: inc/admin/views/advanced-settings.php:15
+msgid ""
+"The price of this certificate. Default is 0, means this certificate is free "
+"to download. Currency is what you chose in Learn Press settings."
+msgstr ""
+
+#: inc/admin/views/cert-editor.php:21
+msgid "Save certificate before editing!"
+msgstr ""
+
+#: inc/admin/views/course-certificates.php:57
+msgid "Active:"
+msgstr ""
+
+#: inc/admin/views/course-certificates.php:64
+msgid "Remove"
+msgstr ""
+
+#: inc/admin/views/course-certificates.php:68
+msgid "Assign"
+msgstr ""
+
+#: inc/admin/views/course-certificates.php:73
+msgid "Edit"
+msgstr ""
+
+#: inc/admin/views/course-certificates.php:85
+msgid "Add new Certificate"
+msgstr ""
+
+#: inc/admin/views/editor-layer-options.php:18
+msgid "Delete layer"
+msgstr ""
+
+#: inc/admin/views/editor-layer-options.php:33
+#: inc/layers/class-lp-certificate-layer.php:153
+msgid "Center"
+msgstr ""
+
+#: inc/admin/views/editor-layer-options.php:35
+msgid "Center Horizontal"
+msgstr ""
+
+#: inc/admin/views/editor-layer-options.php:37
+msgid "Center Vertical"
+msgstr ""
+
+#: inc/admin/views/editor-no-template.php:2
+msgid "No template selected."
+msgstr ""
+
+#: inc/admin/views/editor-no-template.php:3
+msgid "Select Template"
+msgstr ""
+
+#: inc/admin/views/editor-no-template.php:4
+msgid "to starts design your favorite certificate now"
+msgstr ""
+
+#: inc/admin/views/editor-toolbar.php:12
+msgid "Change template"
+msgstr ""
+
+#: inc/admin/views/layer-options/font.php:17
+msgid "System fonts"
+msgstr ""
+
+#: inc/admin/views/layer-options/font.php:22
+msgid "Google fonts"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:54
+#: inc/layers/class-lp-certificate-layer.php:67
+msgid "Font"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:60
+msgid "TrueType font file"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:81
+msgid "Font size"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:89
+msgid "Font style"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:92
+#: inc/layers/class-lp-certificate-layer.php:103
+#: inc/layers/class-lp-certificate-layer.php:113
+msgid "Normal"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:93
+msgid "Italic"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:94
+msgid "Oblique"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:100
+msgid "Font weight"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:104
+msgid "Bold"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:110
+msgid "Text decoration"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:114
+msgid "Underline"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:115
+msgid "Overline"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:116
+msgid "Line-through"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:122
+msgid "Color"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:150
+msgid "Text align"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:152
+#: inc/layers/class-lp-certificate-layer.php:178
+msgid "Left"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:154
+msgid "Right"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:161
+msgid "Text vertical align"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:163
+#: inc/layers/class-lp-certificate-layer.php:172
+msgid "Top"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:164
+msgid "Middle"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:165
+msgid "Bottom"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:184
+msgid "Angle"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:192
+msgid "Scale X"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:201
+msgid "Scale Y"
+msgstr ""
+
+#: inc/layers/class-lp-certificate-layer.php:214
+msgid "Custom Text"
+msgstr ""
+
+#: inc/layers/class-lp-verified-link-layer.php:34
+msgid "QR Size"
+msgstr ""
+
+#: inc/layers/_datetime.php:25
+msgid "Format"
+msgstr ""
+
+#: templates/list-certificates.php:66
+#, php-format
+msgid "In order to get the certificate of the %s course, please pay first!"
+msgstr ""
+
+#: templates/list-certificates.php:73
+msgid "No certificates!"
+msgstr ""
+
+#: templates/popup.php:20
+msgid "Congrats! You have achieved certificate."
+msgstr ""
+
+#: templates/popup.php:22
+msgid "Click or press ESC to close."
+msgstr ""
+
+#: templates/single-certificate.php:28
+msgid " &rsaquo; "
+msgstr ""

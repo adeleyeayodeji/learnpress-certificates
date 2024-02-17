@@ -1,0 +1,526 @@
+#learn-press-certificates {
+    &.no-design{
+        padding: 20px;
+        color: #2d85ba;
+        font-size: 18px;
+    }
+    margin-top: 20px;
+    border: 1px solid #DDD;
+    background: #FFF;
+
+    .cert-toolbar {
+        border-bottom: 1px solid #DDD;
+        position: relative;
+        z-index: 100;
+        .cert-fields {
+            list-style: none;
+            margin: 0;
+            padding: 0 5px;
+            .cert-field {
+                float: left;
+                width: 100px;
+                text-align: center;
+                margin: 10px 5px 0 5px;
+                padding: 10px 0;
+                border: 1px solid #DDD;
+                background: #F5F5F5;
+                color: #777;
+                cursor: move;
+                span {
+                    display: block;
+                    &:before {
+                        font-size: 24px;
+                        line-height: 1;
+                    }
+                }
+                span[class^="dashicons"] {
+                    font-family: Dashicons;
+                }
+                p {
+                    margin: 0;
+                    font-size: 11px;
+                }
+                &:hover {
+                    background: #d1e5ef;
+                }
+                &.ui-draggable-dragging {
+                    z-index: 1000;
+                }
+            }
+            &:after {
+                clear: both;
+                display: block;
+                content: '';
+            }
+        }
+    }
+    .buttons {
+        margin: 10px;
+    }
+    &:not(.has-template) {
+        #cert-design-view-inside {
+            min-height: 500px;
+        }
+    }
+    #no-template-selected {
+        position: absolute;
+        top: 50%;
+        margin-top: -80px;
+        text-align: center;
+        width: 100%;
+    }
+    #cert-design-view {
+        position: relative;
+        max-width: 100%;
+        margin: 0 auto;
+        .canvas-container {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+        }
+        #cert-design-view-inside {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cert-design-line {
+            position: absolute;
+            z-index: 100;
+            display: none;
+            border: 0px dashed #d54e21;
+            pointer-events: none;
+            &.horizontal {
+                left: 0;
+                right: 0;
+                top: 0;
+                margin-top: 30px;
+                border-top-width: 1px;
+            }
+            &.vertical {
+                top: 0;
+                bottom: 0;
+                border-left-width: 1px;
+                left: 0;
+                margin-left: 30px;
+            }
+        }
+
+        &.dragover {
+            .cert-design-line {
+                display: block;
+            }
+        }
+        &.small {
+            border: 1px solid #DDD;
+            margin: 20px auto;
+        }
+
+        #cert-rulers {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .cert-ruler-vertical,
+        .cert-ruler-horizontal {
+            position: absolute;
+            background: #d1e5ef;
+        }
+
+        .ruler-magnitude {
+            position: absolute;
+            display: inline-block;
+            font-size: 10px;
+            font-weight: bold;
+            color: #00a0d2;
+
+            &.horizontal {
+                width: 30px;
+                text-align: center;
+                margin-left: -15px;
+                padding-top: 10px;
+                &.twenty-five {
+                    left: 25%;
+                }
+                &.fifty {
+                    left: 50%;
+                }
+                &.seventy-five {
+                    left: 75%;
+                }
+                &:after {
+                    height: 10px;
+                    border-left: 1px solid #00a0d2;
+                    top: 0;
+                    left: 15px;
+                }
+            }
+            &.vertical {
+                height: 30px;
+                left: 0;
+                position: absolute;
+                text-align: center;
+                width: 30px;
+                padding-top: 0px;
+                &.twenty-five {
+                    top: 25%;
+                }
+                &.fifty {
+                    top: 50%;
+                }
+                &.seventy-five {
+                    top: 75%;
+                }
+                &:after {
+                    width: 10px;
+                    border-top: 1px solid #00a0d2;
+                    left: 0;
+                }
+            }
+
+            &:after {
+                content: '';
+                display: inline-block;
+                position: absolute;
+            }
+
+            &.twenty-five {
+                &:before {
+                    content: '25%';
+                }
+            }
+            &.fifty {
+                &:before {
+                    content: '50%';
+                }
+            }
+            &.seventy-five {
+                &:before {
+                    content: '75%';
+                }
+            }
+        }
+
+        .cert-ruler-horizontal {
+            height: 30px;
+            left: 30px;
+            right: 30px;
+            &:before,
+            &:after {
+                content: '';
+                background: #FFF;
+                position: absolute;
+                height: 30px;
+                width: 30px;
+                top: 0;
+            }
+            &:before {
+                left: -30px;
+            }
+            &:after {
+                right: -30px;
+            }
+            &.bottom {
+                bottom: 0;
+                .ruler-magnitude {
+                    padding-top: 0;
+                    height: 30px;
+                    &:after {
+                        bottom: 0;
+                        top: auto;
+                    }
+                }
+            }
+        }
+        .cert-ruler-vertical {
+            width: 30px;
+            top: 30px;
+            bottom: 30px;
+            &.right {
+                right: 0;
+                .ruler-magnitude:after {
+                    right: 0;
+                    left: auto;
+                }
+            }
+        }
+    }
+    #cert-design-editor {
+        margin: 30px;
+        position: relative;
+        .cert-template {
+            max-width: 100%;
+            line-height: 1;
+            vertical-align: top;
+        }
+    }
+
+    .certificate-preview {
+        padding: 20px;
+        border-top: 1px solid #DDD;
+        img {
+            max-width: 400px;
+        }
+    }
+}
+
+#certificates-options {
+    display: none;
+    .cert-layer-options {
+        margin-top: 12px;
+        .remove-layer {
+            color: #FF0000;
+        }
+    }
+
+    &.loading {
+        .cert-layer-options {
+            display: none;
+        }
+        .inside {
+            &:before {
+                content: '...';
+            }
+        }
+    }
+}
+#certificates-layers,
+#certificates-options{
+    .inside{
+        max-height: 400px;
+        overflow: auto;
+        margin: 0;
+    }
+
+    .button.layer-center{
+        margin-bottom: 4px;
+    }
+}
+
+.cert-layer-options {
+    li {
+        margin: 0 0 10px 0;
+        border-bottom: 1px dashed #DDD;
+        padding-bottom: 10px;
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .cert-option-slider-value {
+            width: 70px;
+            float: right;
+            margin-top: 4px;
+        }
+
+        .cert-option-slider {
+            background-color: #F1F1F1;
+            height: 5px;
+            margin: 20px 90px 20px 7px;
+            position: relative;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            .ui-slider-handle {
+                left: 0%;
+                display: block;
+                width: 13px;
+                height: 13px;
+                border-radius: 50%;
+                margin-top: -4px;
+                position: absolute;
+                background-color: #48bfef;
+                margin-left: -7px;
+                &:before {
+                    border: 5px solid rgba(33, 150, 243, 0.3);
+                    width: 9px;
+                    height: 9px;
+                    content: '';
+                    position: absolute;
+                    border-radius: 50%;
+                    top: -3px;
+                    left: -3px;
+                    cursor: pointer;
+                }
+                &:hover,
+                &.ui-state-active {
+                    background-color: rgb(0, 162, 239);
+                    &:before {
+                        width: 13px;
+                        height: 13px;
+                        top: -5px;
+                        left: -5px;
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+#certificate-browser {
+    .theme-name {
+        padding: 15px;
+        > span {
+            display: none;
+        }
+    }
+    .themes {
+        margin-right: -4%;
+        margin-bottom: -20px;
+    }
+    .theme {
+        width: 46%;
+        margin: 0 4% 4% 0;
+        .theme-screenshot {
+            //text-align: center;
+            //img {
+            //    max-width: 100%;
+            //    max-height: 100%;
+            //    width: auto;
+            //}
+            .certificate-result {
+                z-index: 10;
+            }
+        }
+        .button-remove-certificate {
+            display: none;
+        }
+        &:hover {
+            .theme-screenshot {
+                &:after {
+                    opacity: 0.5;
+                    background: #FFF;
+                    z-index: 1000;
+                    position: relative;
+                }
+            }
+        }
+        &.active {
+            .theme-name {
+                background: #ffffff;
+                color: #03A9F4;
+                box-shadow: inset 0 1px 1px #DDD;
+                -webkit-box-shadow: inset 0 1px 1px #DDD;
+                > span {
+                    display: inline-block;
+                }
+            }
+            .theme-actions {
+                background: #B3E5FC;
+                border-left: 1px solid #DDD;
+            }
+            .button-remove-certificate {
+                display: inline-block;
+            }
+            .button-assign-certificate {
+                display: none;
+            }
+        }
+        &.updating {
+            &:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                opacity: 0.5;
+            }
+        }
+    }
+}
+
+#certificates-layers {
+    .cert-layers {
+        margin: 12px 0 -5px 0px;
+        .layer {
+            border: 1px solid #DDD;
+            padding: 7px 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            background: #FFF;
+            a {
+                display: inline-block;
+                font-family: fontawesome;
+                float: right;
+                text-decoration: none;
+                color: #FF0000;
+                &:before {
+                    content: "\f00d";
+                }
+            }
+            &.active {
+                border-color: #05d7ff;
+            }
+        }
+    }
+}
+
+body {
+    &.post-type-lp_course {
+        .wp-list-table {
+            .column-certificate {
+                width: 100px;
+            }
+            .course-cert-preview {
+                img {
+                    max-width: 100px;
+                }
+            }
+        }
+    }
+    &.post-type-lp_cert {
+        .wp-list-table {
+            .column-courses {
+                width: 300px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    #certificate-browser {
+        .themes {
+            margin-right: 0%;
+        }
+        .theme {
+            width: 100%;
+            margin: 0 0% 4% 0;
+        }
+    }
+}
+
+#learn-press-certificates-preload {
+    margin: 0;
+    border: 1px solid #DDD;
+    background: #FFF;
+    display: block;
+    height: 1px;
+    overflow: hidden;
+    visibility: hidden;
+
+    #cert-design-view-preload {
+        position: relative;
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+
+        #cert-design-view-inside-preload {
+            position: relative;
+            overflow: hidden;
+            #cert-design-editor-preload {
+                margin: 30px;
+                position: relative;
+                img {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

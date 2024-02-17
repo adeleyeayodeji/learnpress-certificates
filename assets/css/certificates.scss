@@ -1,0 +1,180 @@
+.profile-certificates {
+  list-style: none;
+  margin: 0 -2.1% 0 0;
+  padding: 0;
+
+  li.course {
+    list-style: none;
+    width: 31.33333%;
+    margin: 0 2% 20px 0;
+    box-shadow: none;
+    padding: 0;
+    float: left;
+
+    .course-thumbnail {
+      border: 3px solid #DDD;
+      position: relative;
+    }
+  }
+}
+
+.single-certificate-content {
+  max-width: 90%;
+  margin: 0 auto;
+  min-height: 40px;
+}
+
+.certificate {
+  text-align: center;
+}
+
+.certificate-preview {
+  z-index: 0;
+  opacity: 0;
+  position: absolute;
+  max-width: 100px;
+  top: 0;
+  text-align: center;
+
+  .certificate-preview-inner {
+    position: relative;
+
+    .canvas-container {
+      display: none;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    line-height: 1;
+    vertical-align: top;
+  }
+
+  .canvas-container {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+  }
+}
+
+.certificate-actions {
+  list-style: none;
+  text-align: center;
+  margin: 20px 0 0;
+  padding: 0;
+
+  li {
+    display: inline-block;
+    vertical-align: top;
+    line-height: 1;
+    margin-right: 5px;
+    padding: 0 10px;
+    border: solid #DDD 1px;
+    border-radius: 3px;
+
+    &.share-social-cert {
+
+    }
+
+    a {
+      &.social-cert {
+        text-decoration: none;
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+      }
+
+      &.social-download-svg {
+        background: url('../images/download.svg') no-repeat;
+        background-size: cover;
+      }
+
+      &.social-fb-svg {
+        background: url('../images/facebook.svg') no-repeat;
+        background-size: cover;
+      }
+
+      &.social-twitter-svg {
+        background: url('../images/twitter.svg') no-repeat;
+        background-size: cover;
+      }
+    }
+  }
+}
+
+#certificate-popup {
+  height: 0;
+  overflow: hidden;
+  padding: 30px;
+
+  &.ready {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: auto;
+    z-index: 999999;
+    background: rgba(0, 0, 0, 0.65);
+    overflow: auto;
+    padding: 35px;
+
+    .close-popup {
+      position: fixed;
+      width: 25px;
+      height: 25px;
+      background: #FFF;
+      top: 10px;
+      right: 24px;
+      text-align: center;
+      border-radius: 50px;
+
+      &:after {
+        content: "\f00d";
+        font-family: fontawesome;
+        font-size: 18px;
+        line-height: 26px;
+        position: absolute;
+        right: 5px;
+      }
+
+      &:hover {
+        &:after {
+          color: #14c4ff;
+        }
+      }
+    }
+  }
+}
+
+#profile-content-certificates {
+  .certificate-result {
+    //max-width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+
+  .course {
+    width: 48%;
+
+    .course-title {
+      font-size: 1em;
+      -webkit-line-clamp: 1;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+}
+
+#tab-curriculum form[name=certificate-form-button] {
+  display: none;
+}
+
+.wrapper-lp-cert-add-to-cart-woo {
+  display: inline-block;
+}
+
+form[name=form-lp-cert-purchase] {
+  display: inline-block;
+}

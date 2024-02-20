@@ -56,7 +56,7 @@
           total_layer++;
         });
 
-        console.log(options.layers);
+        // console.log(options.layers);
 
         $.each(options.layers, function (i, layer) {
           if (!layer.type) return;

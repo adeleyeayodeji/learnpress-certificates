@@ -2,10 +2,14 @@
 $id    = uniqid();
 $fonts = LP_Certificate::system_fonts();
 
+if ( ! isset( $option ) ) {
+	return;
+}
+
 if ( ! empty( $option['google_font'] ) && ( false !== ( $google_fonts = LP_Certificate::google_fonts() ) ) ) {
 	$fonts = array(
 		$fonts,
-		$google_fonts
+		$google_fonts,
 	);
 }
 ?>
@@ -14,33 +18,36 @@ if ( ! empty( $option['google_font'] ) && ( false !== ( $google_fonts = LP_Certi
 	<?php
 	if ( ! empty( $google_fonts ) ) {
 		?>
-        <optgroup label="<?php esc_attr_e( 'System fonts', 'learnpress-certificates' ); ?>"><?php
-			foreach ( $fonts[0] as $name => $text ) { ?>
-                <option value="<?php echo esc_attr( $name ); ?>" <?php selected( ! empty( $option['std'] ) && ( $option['std'] == $name ) ); ?>><?php echo esc_html( $text ); ?></option>
+		<optgroup label="<?php esc_attr_e( 'System fonts', 'learnpress-certificates' ); ?>">
+		<?php
+		foreach ( $fonts[0] as $name => $text ) {
+			?>
+				<option value="<?php echo esc_attr( $name ); ?>" <?php selected( ! empty( $option['std'] ) && ( $option['std'] == $name ) ); ?>><?php echo esc_html( $text ); ?></option>
 			<?php } ?>
-        </optgroup>
-        <optgroup label="<?php esc_attr_e( 'Google fonts', 'learnpress-certificates' ); ?>">
+		</optgroup>
+		<optgroup label="<?php esc_attr_e( 'Google fonts', 'learnpress-certificates' ); ?>">
 			<?php foreach ( $fonts[1] as $name => $text ) { ?>
-                <option value="<?php echo esc_attr( $text ); ?>" <?php selected( ! empty( $option['std'] ) && ( $option['std'] == $text ) ); ?>><?php echo esc_html( $text ); ?></option>
+				<option value="<?php echo esc_attr( $text ); ?>" <?php selected( ! empty( $option['std'] ) && ( $option['std'] == $text ) ); ?>><?php echo esc_html( $text ); ?></option>
 			<?php } ?>
-        </optgroup>
+		</optgroup>
 		<?php
 	} else {
 		foreach ( $fonts as $name => $text ) {
 			?>
-            <option value="<?php echo esc_attr( $name ); ?>" <?php selected( ! empty( $option['std'] ) && ( $option['std'] == $name ) ); ?>><?php echo esc_html( $text ); ?></option>
+			<option value="<?php echo esc_attr( $name ); ?>" <?php selected( ! empty( $option['std'] ) && ( $option['std'] == $name ) ); ?>><?php echo esc_html( $text ); ?></option>
 			<?php
 		}
-	} ?>
+	}
+	?>
 
 </select>
 <script type="text/javascript">
-    jQuery(function ($) {
-        $('#<?php echo $id;?>').on('change', function () {
-            $(document).triggerHandler('certificate/change-layer-option', {
-                name: $(this).attr('name'),
-                value: this.value
-            });
-        })
-    });
+	jQuery(function ($) {
+		$('#<?php echo $id; ?>').on('change', function () {
+			$(document).triggerHandler('certificate/change-layer-option', {
+				name: $(this).attr('name'),
+				value: this.value
+			});
+		})
+	});
 </script>

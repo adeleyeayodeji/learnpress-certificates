@@ -1,5 +1,8 @@
 <?php
 
+use LearnPress\Models\UserItems\UserCourseModel;
+use LearnPress\Models\UserItems\UserItemModel;
+
 /**
  * Class LP_Certificate
  */
@@ -22,6 +25,11 @@ class LP_Certificate {
 	protected $template = '';
 
 	/**
+	 * @var array|WP_Post|null
+	 */
+	public $data_post = null;
+
+	/**
 	 * LP_Certificate constructor.
 	 *
 	 * @param $id
@@ -33,7 +41,8 @@ class LP_Certificate {
 			return;
 		}
 
-		$this->_id = $id;
+		$this->data_post = get_post( $id );
+		$this->_id       = $id;
 		$this->get_layers();
 	}
 
@@ -49,8 +58,8 @@ class LP_Certificate {
 	public function get_template() {
 
 		if ( ! $this->template ) {
-			$template = get_post_meta( $this->_id, '_lp_cert_template', true );
-			$template = preg_replace( '~^https?://~', is_ssl() ? 'https://' : 'http://', $template );
+			$template = LP_Addon_Certificates::get_link_cert_bg_by_course( $this->get_id() );
+			//$template = preg_replace( '~^https?://~', is_ssl() ? 'https://' : 'http://', $template );
 
 			if ( ! $template ) {
 				$template = plugins_url( '/assets/images/template-default.png', LP_ADDON_CERTIFICATES_FILE );
@@ -77,10 +86,13 @@ class LP_Certificate {
 	 */
 	public function get_layers() {
 		if ( ! $this->_layers ) {
+			$layers = $this->get_raw_layers();
 
-			if ( $layers = $this->get_raw_layers() ) {
+			if ( $layers ) {
 				foreach ( $layers as $layer ) {
-					if ( $layer = $this->get_layer( $layer ) ) {
+					$layer = $this->get_layer( $layer );
+
+					if ( $layer ) {
 						$this->_layers[ $layer->get_name() ] = $layer;
 					}
 				}
@@ -96,11 +108,15 @@ class LP_Certificate {
 	 * @return mixed
 	 */
 	public function get_raw_layers() {
-		if ( false === ( $layers = wp_cache_get( 'certificate-' . $this->get_id(), 'certificates' ) ) ) {
-			if ( $layers = get_post_meta( $this->_id, '_lp_cert_layers', true ) ) {
+		$layers = wp_cache_get( 'certificate-' . $this->get_id(), 'certificates' );
+
+		if ( false === $layers ) {
+			$layers = get_post_meta( $this->_id, '_lp_cert_layers', true );
+
+			if ( $layers ) {
 				if ( is_array( $layers ) ) {
 					foreach ( $layers as $k => $layer ) {
-
+						$layer = (array) $layer;
 						if ( array_key_exists( 'variable', $layer ) && $layer['variable'] ) {
 							$layers[ $k ]['text'] = $layer['variable'];
 						}
@@ -120,11 +136,11 @@ class LP_Certificate {
 	 * @return string
 	 */
 	public function get_preview() {
-		$preview = get_post_meta( $this->get_id(), '_lp_cert_preview', true );
+		//$preview = get_post_meta( $this->get_id(), '_lp_cert_preview', true );
 
-		if ( ! $preview ) {
-			$preview = get_post_meta( $this->get_id(), '_lp_cert_template', true );
-		}
+		//if ( ! $preview ) {
+			$preview = LP_Addon_Certificates::get_link_cert_bg_by_course( $this->get_id() );
+		//}
 
 		if ( ! $preview ) {
 			$preview = plugins_url( '/assets/images/no-image.png', LP_ADDON_CERTIFICATES_FILE );
@@ -195,7 +211,7 @@ class LP_Certificate {
 
 		if ( ! class_exists( $class ) ) {
 			if ( file_exists( LP_ADDON_CERTIFICATES_PATH . '/inc/layers/class-lp-' . $class_file . '-layer.php' ) ) {
-				include_once( LP_ADDON_CERTIFICATES_PATH . '/inc/layers/class-lp-' . $class_file . '-layer.php' );
+				include_once LP_ADDON_CERTIFICATES_PATH . '/inc/layers/class-lp-' . $class_file . '-layer.php';
 			}
 		}
 
@@ -212,7 +228,9 @@ class LP_Certificate {
 	 * @param $name
 	 */
 	public function remove_layer( $name ) {
-		if ( ! $layers = $this->get_layers() ) {
+		$layers = $this->get_layers();
+
+		if ( ! $layers ) {
 			return;
 		}
 
@@ -238,8 +256,13 @@ class LP_Certificate {
 	 * @param $layer_id
 	 */
 	public function layer_options( $layer_id ) {
-		$factory = LP_Addon_Certificates::instance();
-		$factory->admin_view( 'editor-layer-options', array( 'certificate' => $this, 'layer_id' => $layer_id ) );
+		LP_Addon_Certificates_Preload::$addon->admin_view(
+			'editor-layer-options',
+			array(
+				'certificate' => $this,
+				'layer_id'    => $layer_id,
+			)
+		);
 	}
 
 	/**
@@ -256,7 +279,7 @@ class LP_Certificate {
 
 				$permalink = add_query_arg(
 					array(
-						'cert-id' => $this->get_id()
+						'cert-id' => $this->get_id(),
 					),
 					$profile->get_current_url()
 				);
@@ -277,22 +300,21 @@ class LP_Certificate {
 		return 'certificate-' . md5( $this->get_id() );// uniqid( 'certificate-' );
 	}
 
-	/*** HELPER FUNCTIONS ***/
-
 	/**
 	 * Get certificate of a course.
 	 *
 	 * @param $course_id
 	 *
-	 * @return bool|mixed
+	 * @return int
 	 */
-	public static function get_course_certificate( $course_id ) {
-		return ( LP_COURSE_CPT === get_post_type( $course_id ) ) ? get_post_meta( $course_id, '_lp_cert', true ) : false;
-	}
+	public static function get_course_certificate( $course_id ): int {
+		$cert_id_of_course = 0;
 
-	public static function get_course_certificates( $course_id ) {
-		global $wpdb;
-		//$query = $wpdb->prepare()
+		if ( LP_COURSE_CPT === get_post_type( $course_id ) ) {
+			$cert_id_of_course = get_post_meta( $course_id, '_lp_cert', true );
+		}
+
+		return (int) $cert_id_of_course;
 	}
 
 	/**
@@ -301,51 +323,96 @@ class LP_Certificate {
 	 * @param int $current
 	 *
 	 * @return array
+	 * @deprecated 4.0.9
 	 */
 	public static function get_certificates( $current = 0 ) {
+		_deprecated_function( __METHOD__, '4.0.9' );
 		global $wpdb;
 
-		$query = $wpdb->prepare( "
+		$query = $wpdb->prepare(
+			"
 			SELECT ID
 			FROM {$wpdb->posts}
 			WHERE post_type = %s AND post_status = %s
-		", LP_ADDON_CERTIFICATES_CERT_CPT, 'publish' );
+		",
+			LP_ADDON_CERTIFICATES_CERT_CPT,
+			'publish'
+		);
 
-		if ( ( $ids = $wpdb->get_col( $query ) ) && $current ) {
-			if ( false !== ( $index = array_search( $current, $ids ) ) ) {
-				array_splice( $ids, $index, 1 );
-				array_unshift( $ids, $current );
-			}
-		}
+		$ids = $wpdb->get_col( $query );
 
 		return $ids;
 	}
 
-	public static function get_user_certificates( $user_id ) {
-		if ( false === ( $certificates = wp_cache_get( 'user-' . $user_id, 'certificates' ) ) ) {
-			$user          = learn_press_get_user( $user_id );
-			$query_courses = $user->get_purchased_courses( array( 'status' => 'finished' ) );
-			$certificates  = array();
-
-			if ( $query_courses->get_items() ) {
-				foreach ( $query_courses->get_items() as $course_item ) {
-					$course_id = $course_item->get_id();
-					if ( $cert_id = self::get_course_certificate( $course_id ) ) {
-						if ( $course_item->is_passed() ) {
-							$certificates[ $course_id ] = array(
-								//'course_data' => $course_item->get_results( false ),
-								'cert_id'   => $cert_id,
-								'user_id'   => $user_id,
-								'course_id' => $course_id
-							);
-							//learn_press_update_user_item_meta( $course_item->get_user_item_id(), '_lp_cert', $certificates[ $course_id ] );
-							//LP_Addon_Certificates::instance()->update_user_certificate( $course_id, $user_id, false );
-						}
-					}
-				}
-			}
-			wp_cache_set( 'user-' . $user_id, $certificates, 'certificates' );
+	/**
+	 * Get certificates
+	 *
+	 * @param LP_Certificate_Filter $filter
+	 * @param int $total_rows
+	 *
+	 * @return array|null|int|string
+	 * @since 4.0.2
+	 * @version 1.0.0
+	 */
+	public static function query_certificates( LP_Certificate_Filter $filter, int &$total_rows = 0 ) {
+		try {
+			$courses = LP_Certificate_DB::getInstance()->query_certificates( $filter, $total_rows );
+		} catch ( Throwable $e ) {
+			error_log( $e->getMessage() );
+			$courses = null;
 		}
+
+		return $courses;
+	}
+
+	/**
+	 * Get User's Certificate
+	 *
+	 * @param int $user_id
+	 * @param array $args_filter - params with filter items
+	 *
+	 * @editor tungnx
+	 * @modify 4.0.2
+	 * @return array
+	 */
+	public static function get_user_certificates( $user_id = 0, $args_filter = array() ): array {
+		$lp_db        = LP_Database::getInstance();
+		$certificates = array();
+		$total_rows   = 0;
+		$limit        = (int) LP_Settings::get_option( 'lp_cert_per_page', 10 );
+
+		$filter             = new LP_User_Items_Filter();
+		$filter->user_id    = $user_id;
+		$filter->graduation = LP_COURSE_GRADUATION_PASSED;
+		$filter->join[]     = "INNER JOIN $lp_db->tb_postmeta AS pm ON ui.item_id = pm.post_id";
+		$filter->where[]    = $lp_db->wpdb->prepare( 'AND pm.meta_key = %s', '_lp_cert' );
+
+		//if per page = 0 then get all
+		if ( $limit > 0 ) {
+			$filter->limit = $limit;
+			//check params args_filter
+			if ( ! empty( $args_filter['page'] ) ) {
+				$filter->page = $args_filter['page'];
+			}
+		} elseif ( $limit === 0 ) {
+			$filter->limit = - 1;
+		}
+
+		$filter->fields = array( 'meta_value' );
+		$courses        = LP_User_Item_Course::get_user_courses( $filter, $total_rows );
+
+		foreach ( $courses as $course ) {
+			$certificates['items'][ $course->item_id ] = array(
+				'cert_id'   => $course->meta_value,
+				'user_id'   => $course->user_id,
+				'course_id' => $course->item_id,
+
+			);
+			$certificates['cert_key'][]                = self::get_cert_key( $course->user_id, $course->item_id, $course->meta_value, false );
+		}
+
+		$certificates['pages'] = LP_Database::get_total_pages( $limit, $total_rows );
+		$certificates['total'] = count( $courses );
 
 		return $certificates;
 	}
@@ -355,7 +422,7 @@ class LP_Certificate {
 			$cert_id = self::get_course_certificate( $course_id );
 		}
 
-		return ( $prefix ? 'user_cert_' : '' ) . md5( $user_id . ":" . $course_id . ":" . $cert_id );
+		return ( $prefix ? 'user_cert_' : '' ) . md5( $user_id . ':' . $course_id . ':' . $cert_id );
 	}
 
 	/**
@@ -379,8 +446,10 @@ class LP_Certificate {
 	 * @return array
 	 */
 	public static function google_fonts() {
-		$fonts = false;
-		if ( $settings = LP()->settings->get( 'certificates.google_fonts' ) ) {
+		$fonts    = false;
+		$settings = LearnPress::instance()->settings()->get( 'certificates.google_fonts' );
+
+		if ( $settings ) {
 			if ( ! empty( $settings['families'] ) ) {
 				$fonts = explode( '|', $settings['families'] );
 			}
@@ -396,7 +465,62 @@ class LP_Certificate {
 		return $fonts;
 	}
 
-	/*public static function user_achieved_certificate( $user_id, $course_id ) {
+	public function get_price() {
+		return (float) get_post_meta( $this->_id, '_lp_certificate_price', true );
+	}
+
+	/**
+	 * Check user can buy certificate.
+	 *
+	 * @param int $course_id
+	 *
+	 * @return array
+	 */
+	public function can_buy_course( int $course_id = 0 ): array {
+		$flag = array(
+			'status'  => false,
+			'message' => '',
+			'code'    => '',
+		);
+
+		try {
+			if ( ! $this->data_post ) {
+				throw new Exception( __( 'Certificate not available', 'learnpress-certificates' ) );
+			}
+
+			if ( empty( $this->get_price() ) ) {
+				$flag['code'] = 'free';
+				throw new Exception( __( 'Certificate is free. So you do not need to buy', 'learnpress-certificates' ) );
+			}
+
+			$user_item_query = learn_press_get_user_item(
+				array(
+					'user_id'  => get_current_user_id(),
+					'item_id'  => $course_id,
+					'ref_type' => LP_ORDER_CPT,
+				)
+			);
+
+			if ( empty( $user_item_query ) ) {
+				throw new Exception( __( 'You still didn\'t passed course', 'learnpress-certificates' ) );
+			}
+
+			$user_item = new LP_User_Item( $user_item_query );
+
+			$course_grade = $user_item->get_status( 'graduation' );
+
+			if ( 'finished' === $user_item->get_status() && 'passed' === $course_grade ) {
+				$flag['status'] = true;
+			}
+		} catch ( Exception $e ) {
+			$flag['message'] = $e->getMessage();
+		}
+
+		return $flag;
+	}
+
+	/*
+	public static function user_achieved_certificate( $user_id, $course_id ) {
 		$user = learn_press_get_user( $user_id );
 		if ( $user ) {
 			$course_item = $user->get_course_data( $course_id );
@@ -417,79 +541,75 @@ class LP_Certificate {
 	 * @param int $user_id
 	 *
 	 * @return array
-	 * @throws Exception
+	 * @since 4.0.0
+	 * @version 1.0.1
 	 */
-	public static function can_get_certificate( $course_id = 0, $user_id = 0 ) {
-		$data = array( 'flag' => 0, 'reason' => '' );
-
-		$user_item_query = learn_press_get_user_item( array(
-			'user_id'  => $user_id,
-			'item_id'  => $course_id,
-			'ref_type' => LP_ORDER_CPT
-		), true );
-
-		if ( empty( $user_item_query ) ) {
-			return $data;
-		}
-
-		$user_item = new LP_User_Item( $user_item_query );
-
-		// Check if course not finish or not passed
-		$course_grade = $user_item->get_meta( 'grade' );
-		if ( $user_item->get_status() != 'finished' || $course_grade != 'passed' ) {
-			$data['reason'] = 'not_passed';
-
-			return $data;
-		}
-
-		// get certificate id assign in course
-		$cert_id_assigned = (int) get_post_meta( $course_id, '_lp_cert', true );
-
-		// Check certificate not set price or price = 0
-		$cert_price = (int) get_post_meta( $cert_id_assigned, '_lp_certificate_price', true );
-
-		if ( ! $cert_price ) {
-			$data['flag'] = 1;
-		} else {
-			/*** Case buy certificate - Check Status LP Order certificate in course of user ***/
-			$data['reason'] = 'not_buy';
-
-			$data_query = array(
-				'user_id'   => $user_id,
-				'cert_id'   => $cert_id_assigned,
-				'course_id' => $course_id
-			);
-
-			$order_of_cert_query = LP_Certificate_DB::getInstance()->get_order_id_of_cert_course( $data_query );
-
-			if ( ! empty( $order_of_cert_query ) ) {
-				$order_of_cert = new LP_Order( $order_of_cert_query->ref_id );
-
-				if ( $order_of_cert->get_status() == 'completed' ) {
-					$data['flag']   = 1;
-					$data['reason'] = '';
-				}
-			}
-
-			// For old version < 3.1.4
-			$lp_cert_order = learn_press_get_user_item_meta( $user_item_query->user_item_id, '_lp_certificate_order_id', true );
-			if ( $lp_cert_order && 'completed' == learn_press_get_order_status( $lp_cert_order ) ) {
-				$data['flag']   = 1;
-				$data['reason'] = '';
-			}
-			// End
-			/*** End case buy certificate ***/
-		}
-
-		// Update info cert key md5 to get user_id, course_id, cert_id
-		$key                 = LP_Certificate::get_cert_key( $user_id, $course_id, $cert_id_assigned, false );
-		$data_user_cert_info = array(
-			'user_id'   => $user_id,
-			'course_id' => $course_id,
-			'cert_id'   => $cert_id_assigned
+	public static function can_get_certificate( int $course_id = 0, int $user_id = 0 ): array {
+		$data = array(
+			'flag'   => 0,
+			'reason' => '',
 		);
-		update_option( "user_cert_{$key}", $data_user_cert_info );
 
-		return $data;
+		try {
+			$filter_user_course          = new LP_User_Items_Filter();
+			$filter_user_course->user_id = $user_id;
+			$filter_user_course->item_id = $course_id;
+			$user_course                 = UserCourseModel::get_user_item_model_from_db( $filter_user_course );
+
+			if ( empty( $user_course ) ) {
+				$data['reason'] = 'not data user course';
+
+				return $data;
+			}
+
+			if ( $user_course->status != LP_COURSE_FINISHED
+			     || $user_course->graduation != LP_COURSE_GRADUATION_PASSED ) {
+				$data['reason'] = 'not_passed';
+
+				return $data;
+			}
+
+			// get certificate id assign in course
+			$cert_id_assigned = (int) get_post_meta( $course_id, '_lp_cert', true );
+
+			// Check certificate not set price or price = 0
+			$cert_price = (int) get_post_meta( $cert_id_assigned, '_lp_certificate_price', true );
+
+			if ( ! $cert_price ) {
+				$data['flag'] = 1;
+			} else {
+				/*** Case buy certificate - Check Status LP Order certificate in course of user */
+				$data['reason'] = 'not_buy';
+
+				$filter_user_cert            = new LP_User_Items_Filter();
+				$filter_user_cert->user_id   = $user_id;
+				$filter_user_cert->item_id   = $cert_id_assigned;
+				$filter_user_cert->item_type = 'lp_certificate';
+				$filter_user_cert->ref_type  = LP_ORDER_CPT;
+				$filter_user_cert->parent_id = $user_course->get_user_item_id();
+				$user_cert                   = UserItemModel::get_user_item_model_from_db( $filter_user_cert );
+
+				if ( ! empty( $user_cert ) ) {
+					if ( $user_cert->status === LP_ORDER_COMPLETED ) {
+						$data['flag']   = 1;
+						$data['reason'] = '';
+					}
+				}
+				/*** End case buy certificate */
+			}
+
+			// Update info cert key md5 to get user_id, course_id, cert_id
+			$key                 = self::get_cert_key( $user_id, $course_id, $cert_id_assigned, false );
+			$data_user_cert_info = array(
+				'user_id'   => $user_id,
+				'course_id' => $course_id,
+				'cert_id'   => $cert_id_assigned,
+			);
+			update_option( "user_cert_{$key}", $data_user_cert_info );
+		} catch ( Throwable $e ) {
+			$data['reason'] = $e->getMessage();
+		}
+
+		return apply_filters( 'learn-press/certificate/can-get-certificate', $data, $course_id, $user_id );
 	}
 }

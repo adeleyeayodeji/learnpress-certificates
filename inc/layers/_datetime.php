@@ -16,19 +16,19 @@ class LP_Certificate_Datetime_Layer extends LP_Certificate_Layer {
 	 * @return array
 	 */
 	public function add_field( $_options, $layer ) {
-
 		if ( ! $this->_added_field && ( $layer->get_name() === $this->get_name() ) ) {
 			$options    = array( $_options[0] );
 			$options[1] = array(
 				'name'  => 'formatDate',
 				'type'  => 'text',
-				'title' => __( 'Format', 'learnpress-certificates' ),
-				'std'   => ''
+				'title' => esc_html__( 'Format', 'learnpress-certificates' ),
+				'std'   => '',
 			);
 
 			for ( $i = 1, $n = sizeof( $_options ); $i < $n; $i ++ ) {
 				$options[] = $_options[ $i ];
 			}
+
 			$_options           = $options;
 			$this->_added_field = true;
 		}
@@ -37,6 +37,6 @@ class LP_Certificate_Datetime_Layer extends LP_Certificate_Layer {
 	}
 
 	public function get_format() {
-		return ! empty( $this->options['formatDate'] ) ? $this->options['formatDate'] : 'd/m/Y';
+		return ! empty( $this->options['formatDate'] ) ? $this->options['formatDate'] : get_option( 'date_format', 'd/m/Y' );
 	}
 }

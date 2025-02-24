@@ -18,20 +18,22 @@ if ( ! isset( $course ) ) {
 	return;
 }
 ?>
+
 <form name="form-lp-cert-purchase" method="post" enctype="multipart/form-data">
 	<?php
 	do_action( 'learn-press/before-purchase-certificate-button' );
+
 	$cert_id = (int) get_post_meta( $course->get_id(), '_lp_cert', true );
+
 	if ( $cert_id ) {
-		echo '<input type="hidden" name="_learnpress_certificate_id" value="' . $cert_id . '">';
+		echo '<input type="hidden" name="lp_cert_id" value="' . esc_attr( $cert_id ) . '">';
 	}
 	?>
-	<input type="hidden" name="purchase-course" value="<?php echo esc_attr( $course->get_id() ); ?>"/>
-	<input type="hidden" name="purchase-course-nonce"
-		   value="<?php echo esc_attr( LP_Nonce_Helper::create_course( 'purchase' ) ); ?>"/>
+
+	<input type="hidden" name="lp_course_id_of_cert" value="<?php echo esc_attr( $course->get_id() ); ?>"/>
 
 	<button class="lp-button btn-purchase-certificate">
-		<?php echo __( 'Buy this certificate', 'learnpress' ); ?>
+		<?php esc_html_e( 'Buy this certificate', 'learnpress-certificates' ); ?>
 	</button>
 
 	<?php do_action( 'learn-press/after-purchase-certificate-button' ); ?>

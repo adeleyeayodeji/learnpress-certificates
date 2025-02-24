@@ -6,17 +6,17 @@
  *
  * @package LearnPress/Templates/Certificates
  * @author  ThimPress
- * @version 3.0.0
+ * @version 3.0.1
  */
 
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || exit;
 
 if ( ! isset( $certificate ) ) {
 	return;
 }
-
 ?>
+
 <div id="certificate-popup">
-	<?php learn_press_certificate_get_template( 'details.php', array( 'certificate' => $certificate ) ); ?>
+	<?php LP_Addon_Certificates_Preload::$addon->get_template( 'details.php', compact( 'certificate' ) ); ?>
 	<a href="" class="close-popup"></a>
 </div>

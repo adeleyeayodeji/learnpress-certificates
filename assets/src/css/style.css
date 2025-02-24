@@ -1,0 +1,19 @@
+.lp-loading-circle {
+    width: 15px;
+    height: 15px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    border-top-color: rgba(0, 0, 0, 0.76);
+    animation: spin 1s infinite linear;
+    display: inline-block;
+}
+.lp-loading-circle.hide {
+    display: none;
+}
+.button-loadmore-certificate{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap:5px;
+    max-width: fit-content;
+}

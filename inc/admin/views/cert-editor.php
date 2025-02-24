@@ -1,8 +1,9 @@
 <?php
 $cert = '';
 global $post;
-$cert_template = get_post_meta( $post->ID, '_lp_cert_template', true );
+$cert_template = LP_Addon_Certificates::get_link_cert_bg_by_course( $post->ID );
 ?>
+
 <div id="learn-press-certificates-preload" style="">
 	<div id="cert-design-view-preload">
 		<div id="cert-design-view-inside-preload">

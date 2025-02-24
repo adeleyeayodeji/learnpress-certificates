@@ -9,7 +9,7 @@
  * @version 3.0.1
  */
 
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || exit;
 
 /**
  * @var LP_Certificate $certificate
@@ -17,10 +17,13 @@ defined( 'ABSPATH' ) or die();
 if ( ! isset( $certificate ) ) {
 	return;
 }
+
+/**
+ * @var LP_User_Certificate $certificate
+ */
 $link_cert = $certificate->get_sharable_permalink();
 ?>
-<form name="certificate-form-button" class="form-button" target="_blank"
-	  action="<?php echo $link_cert; ?>"
-	  method="post">
-	<button class="lp-button"><?php _e( 'Certificate', 'learnpress-certificates' ); ?></button>
+
+<form name="certificate-form-button" class="form-button" action="<?php echo esc_url( $link_cert ); ?>" method="post">
+	<button class="lp-button"><?php esc_html_e( 'Certificate', 'learnpress-certificates' ); ?></button>
 </form>

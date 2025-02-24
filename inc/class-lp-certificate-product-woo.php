@@ -7,10 +7,10 @@ if ( ! class_exists( 'WC_Product' ) ) {
 
 global $woocommerce;
 
-include_once 'class-wc-order-item-cert.php';
+require_once 'class-wc-order-item-cert.php';
 
 /**
- * Class WC_Product_LP_Course
+ * Class WC_Product_LP_Certificate
  */
 class WC_Product_LP_Certificate extends WC_Product {
 	/**
@@ -32,7 +32,7 @@ class WC_Product_LP_Certificate extends WC_Product {
 	public function __get( $key ) {
 		if ( $key === 'id' ) {
 			return $this->get_id();
-		} else if ( $key === 'post' ) {
+		} elseif ( $key === 'post' ) {
 			return get_post( $this->get_id() );
 		}
 
@@ -106,7 +106,7 @@ class WC_Product_LP_Certificate extends WC_Product {
 	 * @return mixed|string|void
 	 */
 	public function get_image( $size = 'woocommerce_thumbnail', $attr = array(), $placeholder = true ) {
-		$cert_bg_img = get_post_meta( $this->id, '_lp_cert_template', true );
+		$cert_bg_img = LP_Addon_Certificates::get_link_cert_bg_by_course( $this->id );
 
 		if ( ! empty( $cert_bg_img ) ) {
 			$image = '<img src="' . $cert_bg_img . '" width="300" height="300" />';

@@ -6,56 +6,99 @@ class LP_Certificates_Settings extends LP_Abstract_Settings_Page {
 	 */
 	public function __construct() {
 		$this->id   = 'certificates';
-		$this->text = __( 'Certificates', 'learnpress-certificates' );
+		$this->text = esc_html__( 'Certificates', 'learnpress-certificates' );
 
 		parent::__construct();
 	}
 
 	public function get_settings( $section = '', $tab = '' ) {
+		return $this->setting_v4();
+	}
+
+	public function setting_v4() {
 		$desc_google_font = '';
 
-		return array(
+		$settings = array(
 			array(
-				'title'   => __( 'Google Fonts', 'learnpress-certificates' ),
-				'id'      => 'certificates[google_fonts]',
-				'default' => 'no',
-				'type'    => 'google-fonts',
-				'desc'    => $desc_google_font
+				'type' => 'title',
 			),
 			array(
-				'name'    => __( 'Download certificate types', 'learnpress-certificates' ),
+				'name'        => esc_html__( 'Google Fonts', 'learnpress-certificates' ),
+				'desc'        => esc_html__(
+					'Font families separated by |, eg: Open Sans|Roboto.',
+					'learnpress-certificates'
+				),
+				'placeholder' => esc_html__( 'Font family', 'learnpress-certificates' ),
+				'id'          => 'certificates[google_fonts][families]',
+				'type'        => 'text',
+				'default'     => '',
+			),
+			array(
+				'name'        => '',
+				'desc'        => esc_html__(
+					'Font subsets separated by comma, eg: greek,latin.',
+					'learnpress-certificates'
+				),
+				'placeholder' => esc_html__( 'Subset', 'learnpress-certificates' ),
+				'id'          => 'certificates[google_fonts][subsets]',
+				'type'        => 'text',
+				'default'     => '',
+			),
+			array(
+				'name'    => esc_html__( 'Download certificate types', 'learnpress-certificates' ),
 				'id'      => 'lp_cer_down_type',
 				'type'    => 'radio',
 				'options' => array(
-					'image' => __( 'Image', 'learnpress-certificates' ),
-					'pdf'   => __( 'PDF', 'learnpress-certificates' ),
+					'image' => esc_html__( 'Image', 'learnpress-certificates' ),
+					'pdf'   => esc_html__( 'PDF', 'learnpress-certificates' ),
 				),
-				'default' => 'image'
+				'default' => 'image',
 			),
 			array(
-				'name'    => __( 'Show certificate popup', 'learnpress-certificates' ),
+				'name'    => esc_html__( 'Show certificate popup', 'learnpress-certificates' ),
+				'desc'    => esc_html__( 'Show certificate popup', 'learnpress-certificates' ),
 				'id'      => 'lp_cer_show_popup',
-				'type'    => 'yes-no',
-				'default' => 'yes'
+				'type'    => 'checkbox',
+				'default' => 'yes',
 			),
 			array(
-				'name'    => __( 'Slug show link certificate of user', 'learnpress-certificates' ),
+				'name'    => esc_html__( 'Slug show link certificate of user', 'learnpress-certificates' ),
 				'id'      => 'lp_cert_slug',
 				'type'    => 'text',
-				'default' => 'certificates'
+				'default' => 'certificates',
 			),
 			array(
-				'name'            => __( 'Social Sharing', 'learnpress-certificates' ),
-				'id'              => 'certificates[socials]',
-				'default'         => '',
-				'type'            => 'checkbox_list',
-				'options'         => array(
-					'twitter'  => __( 'Twitter', 'learnpress-certificates' ),
-					'facebook' => __( 'Facebook', 'learnpress-certificates' ),
+				'title'         => esc_html__( 'Social Sharing', 'learnpress-certificates' ),
+				'id'            => 'certificates[socials_twitter]',
+				'default'       => 'no',
+				'type'          => 'checkbox',
+				'checkboxgroup' => 'start',
+				'desc'          => esc_html__( 'Twitter', 'learnpress-certificates' ),
+			),
+			array(
+				'id'            => 'certificates[socials_facebook]',
+				'default'       => 'no',
+				'type'          => 'checkbox',
+				'checkboxgroup' => 'end',
+				'desc'          => esc_html__( 'Facebook', 'learnpress-certificates' ),
+			),
+			array(
+				'name'              => esc_html__( 'Certificate per page', 'learnpress-certificates' ),
+				'id'                => 'lp_cert_per_page',
+				'type'              => 'number',
+				'default'           => 10,
+				'custom_attributes' => array(
+					'min' => 0,
 				),
-				'select_all_none' => false
-			)
+				'desc'              => esc_html__( 'The total number of displayed certificates per page. If set 0 then show all.', 'learnpress-certificates' ),
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'lp_profile_general',
+			),
 		);
+
+		return apply_filters( 'learnpress/certificate/settings', $settings );
 	}
 }
 

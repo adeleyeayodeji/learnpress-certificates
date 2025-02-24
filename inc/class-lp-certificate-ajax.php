@@ -27,10 +27,14 @@ class LP_Cert_AJAX {
 	}
 
 	public function lpCertCreateImage() {
-		$data = array( 'code' => 0, 'message' => '' );
+		$data = array(
+			'code'    => 0,
+			'message' => '',
+		);
 
 		try {
 			global $wp_filesystem;
+
 			if ( empty( $wp_filesystem ) ) {
 				require_once ABSPATH . '/wp-admin/includes/file.php';
 				WP_Filesystem();
@@ -39,15 +43,15 @@ class LP_Cert_AJAX {
 			$uploads  = wp_upload_dir();
 			$cert_dir = $uploads['basedir'] . DIRECTORY_SEPARATOR . 'learn-press-cert';
 
-			$img_cert_name = LP_Helper::sanitize_params_submitted( $_POST['name_image'] );
+			$img_cert_name = LP_Request::get_param( 'name_image', '', 'text', 'post' );
 			$file_img_cer  = $cert_dir . DIRECTORY_SEPARATOR . $img_cert_name . '.png';
 
 			fopen( $file_img_cer, 'w' );
 
-			$data64 = str_replace( 'data:image/png;base64,', '', LP_Helper::sanitize_params_submitted( $_POST['data64'] ) );
+			$data64 = str_replace( 'data:image/png;base64,', '', LP_Request::get_param( 'data64', '', 'text', 'post' ) );
 			$data64 = base64_decode( $data64 );
 
-			//file_put_contents( $file_img_cer, $data64 );
+			// file_put_contents( $file_img_cer, $data64 );
 			$wp_filesystem->put_contents( $file_img_cer, $data64, FS_CHMOD_FILE );
 
 			$data['url_cert'] = $uploads['baseurl'] . '/learn-press-cert/' . $img_cert_name . '.png';
@@ -65,7 +69,10 @@ class LP_Cert_AJAX {
 	 * Store lp_cert_id key to cart item
 	 */
 	public function lp_cert_add_to_cart_woo() {
-		$result = array( 'code' => 0, 'message' => __( 'error', 'learnpress-certificates' ) );
+		$result = array(
+			'code'    => 0,
+			'message' => __( 'error', 'learnpress-certificates' ),
+		);
 
 		if ( ! isset( $_POST['lp_course_id_of_cert'] ) || ! isset( $_POST['lp_cert_id'] ) ) {
 			$result['message'] = __( 'Params invalid', 'learnpress-certificates' );
@@ -73,8 +80,8 @@ class LP_Cert_AJAX {
 			wp_send_json( $result );
 		}
 
-		$course_id = absint( wp_unslash( $_POST['lp_course_id_of_cert'] ) );
-		$cert_id   = absint( wp_unslash( $_POST['lp_cert_id'] ) );
+		$course_id = LP_Request::get_param( 'lp_course_id_of_cert', 0, 'int', 'post' );
+		$cert_id   = LP_Request::get_param( 'lp_cert_id', 0, 'int', 'post' );
 
 		if ( ! isset( $_POST['purchase-certificate-nonce'] ) || ! wp_verify_nonce( $_POST['purchase-certificate-nonce'], 'purchase-cert-' . $cert_id ) ) {
 			$result['message'] = 'params invalid';
@@ -83,12 +90,11 @@ class LP_Cert_AJAX {
 		}
 
 		$wc_cart       = WC()->cart;
-		$cart_item_key = $wc_cart->add_to_cart( $course_id );
+		$cart_item_key = $wc_cart->add_to_cart( $cert_id );
 
 		if ( $cart_item_key ) {
-			$wc_cart->cart_contents[ $cart_item_key ]['lp_course_id_of_cert'] = $course_id;
-			$wc_cart->cart_contents[ $cart_item_key ]['is_lp_cert_product']   = 1;
-			$wc_cart->cart_contents[ $cart_item_key ]['lp_cert_id']           = $cert_id;
+			$wc_cart->cart_contents[ $cart_item_key ]['course_id']  = $course_id;
+			$wc_cart->cart_contents[ $cart_item_key ]['lp_cert_id'] = $cert_id;
 
 			$wc_cart->set_session();
 
@@ -96,15 +102,14 @@ class LP_Cert_AJAX {
 			$result['message']          = $cart_item_key;
 			$result['button_view_cart'] = '<a class="btn-lp-cert-view-cart" target="_blank" href="' . wc_get_cart_url() . '"><button class="lp-button">' . __( 'View cart certificate', 'learnpress-certificates' ) . '</button></a>';
 
-			if ( 'yes' == LP()->settings->get( 'woo-payment_redirect_to_checkout' ) ) {
+			if ( 'yes' == LearnPress::instance()->settings()->get( 'woo-payment_redirect_to_checkout' ) ) {
 				$result['redirect_to'] = wc_get_checkout_url();
 			}
 		} else {
 			$wc_notices = wc_get_notices();
 
-			if ( isset( $wc_notices['error'] ) && ! empty( $wc_notices['error'] ) ) {
-				//$message_error = sanitize_text_field($wc_notices['error'][0]['notice']);
-				$result['message'] = __( 'You cannot add this certificate to your cart. Maybe certificate exists', 'learnpress-certificates' );
+			if ( ! empty( $wc_notices['error'] ) ) {
+				$result['message'] = esc_html__( 'You cannot add this certificate to your cart. Maybe certificate exists', 'learnpress-certificates' );
 			}
 		}
 

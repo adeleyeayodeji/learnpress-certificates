@@ -4,6 +4,7 @@
  * Class WC_Order_Item_LP_Cert
  */
 class WC_Order_Item_LP_Cert extends WC_Order_Item_Product {
+
 	public function set_product_id( $value ) {
 		if ( $value > 0 && 'lp_cert' !== get_post_type( absint( $value ) ) ) {
 			$this->error( 'order_item_product_invalid_product_id', __( 'Invalid product ID', 'woocommerce' ) );
